@@ -33,29 +33,40 @@ ORDER BY original_movie_id;
 `;
 
 async function runOmdb() {
-  try {
-    await client.connect();
-    console.log("You have successfully connected to omdb database");
-    console.log("Welcome to search-movies-cli!");
+  await client.connect();
+  console.log("You have successfully connected to omdb database");
+  console.log("Welcome to search-movies-cli!");
 
-    const searchString = readlineSync.question(
-      'Type to search for your movie or "q" to quit '
-    );
+  let userSearch = "";
+  while (userSearch !== "q") {
+    userSearch = readlineSync
+      .question('Type to search for your movie or "q" to quit: ')
+      .toLowerCase();
+
     const selectSearch = `
-      SELECT id,name,date,budget
-      FROM movies
-      where name LIKE '${searchString}%'
-      order by date
-      limit 10
-    `;
-
-    const res = await client.query(selectSearch);
-    console.table(res.rows);
-  } catch (err) {
-    console.log(err.stack);
-  } finally {
-    client.end();
+    SELECT id, name, date, runtime, budget, revenue, vote_average, votes_count, kind
+    FROM movies
+    WHERE 
+      lower(name) LIKE '${userSearch}%' AND
+      kind = 'movie' AND
+      date IS NOT null
+    ORDER BY date DESC
+    LIMIT 10
+  `;
+    if (userSearch !== "q") {
+      try {
+        const res = await client.query(selectSearch);
+        console.table(res.rows);
+      } catch (err) {
+        console.log(err.stack);
+      } finally {
+        console.log("Search was successful!");
+      }
+    }
   }
+
+  console.log("Sad to see you go!");
+  client.end();
 }
 
 runOmdb();
