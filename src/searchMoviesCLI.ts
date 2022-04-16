@@ -47,7 +47,7 @@ async function runOmdb() {
     SELECT id, name, date, runtime, budget, revenue, vote_average, votes_count, kind
     FROM movies
     WHERE 
-      lower(name) LIKE '${userSearch}%' AND
+      lower(name) LIKE '%${userSearch}%' AND
       kind = 'movie' AND
       date IS NOT null
     ORDER BY date DESC
