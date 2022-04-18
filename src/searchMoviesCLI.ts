@@ -15,6 +15,14 @@ const selectFavourites = `
 SELECT * from favourites
 `;
 
+function isInputInvalid(confirmSave: string) {
+  if (confirmSave === 'y' || confirmSave === 'n') {
+    return false
+  } else {
+    return true
+  }
+}
+
 async function runOmdb() {
   await client.connect();
   console.log("You have successfully connected to omdb database");
@@ -65,7 +73,7 @@ async function runOmdb() {
           console.table([saveResult]);
           let confirmSave = ''
 
-          while (confirmSave !== 'y' || 'n') {
+          while (isInputInvalid(confirmSave)) {
             confirmSave = question(`Are you sure you want to save this movie to favourites / y or n? `)
             if (confirmSave === 'y') {
               console.log("save")
