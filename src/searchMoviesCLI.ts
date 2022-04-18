@@ -21,7 +21,7 @@ async function runOmdb() {
   let userSearch = "";
   while (userSearch !== "q") {
     userSearch = readlineSync
-      .question('Type to search for your movie or "q" to quit: ')
+      .question('Type to search for your movie / "q" to quit / "s" to see favourites: ')
       .toLowerCase();
 
     const selectSearch = `
@@ -34,20 +34,26 @@ async function runOmdb() {
     ORDER BY date DESC
     LIMIT 10
   `;
-    if (userSearch !== "q") {
-      try {
-        const res = await client.query(selectSearch);
-        console.table(res.rows);
-      } catch (err) {
-        console.log(err.stack);
-      } finally {
-        console.log("Search was successful!");
-      }
+
+    if (userSearch === "q") {
+      console.log("Sad to see you go!");
+      client.end();
+      return
     }
+
+    try {
+      const res = await client.query(selectSearch);
+      console.table(res.rows);
+    } catch (err) {
+      console.log(err.stack);
+    } finally {
+      console.log("Search was successful!");
+    }
+
+
   }
 
-  console.log("Sad to see you go!");
-  client.end();
+
 }
 
 runOmdb();
