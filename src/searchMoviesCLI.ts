@@ -35,21 +35,31 @@ async function runOmdb() {
     LIMIT 10
   `;
 
+    const selectFavourites = `
+      SELECT * from favourites
+    `
+
     if (userSearch === "q") {
       console.log("Sad to see you go!");
       client.end();
       return
-    }
+    } 
 
-    try {
-      const res = await client.query(selectSearch);
-      console.table(res.rows);
-    } catch (err) {
-      console.log(err.stack);
-    } finally {
-      console.log("Search was successful!");
-    }
+    if (userSearch === "s") {
+      console.log("Here are your favourites")
+      const favouritesRes = await client.query(selectFavourites)
+      console.table(favouritesRes.rows)
+    } else {
 
+      try {
+        const searchRes = await client.query(selectSearch);
+        console.table(searchRes.rows);
+      } catch (err) {
+        console.log(err.stack);
+      } finally {
+        console.log("Search was successful!");
+      }
+    }
 
   }
 
