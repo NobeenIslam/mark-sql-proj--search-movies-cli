@@ -63,6 +63,16 @@ async function runOmdb() {
         } else {
           const saveResult = searchRes.rows[parseInt(rowNumberToSave)];
           console.table([saveResult]);
+          let confirmSave = ''
+
+          while (confirmSave !== 'y' || 'n') {
+            confirmSave = question(`Are you sure you want to save this movie to favourites / y or n? `)
+            if (confirmSave === 'y') {
+              console.log("save")
+            } else if (confirmSave === 'n') {
+              console.log("Cancel")
+            }
+          }
         }
       } catch (err) {
         console.log(err.stack);
