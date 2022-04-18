@@ -13,6 +13,8 @@ limit 1
 
 `;
 
+
+
 async function runOmdb() {
   await client.connect();
   console.log("You have successfully connected to omdb database");
@@ -32,7 +34,7 @@ async function runOmdb() {
       kind = 'movie' AND
       date IS NOT null
     ORDER BY date DESC
-    LIMIT 10
+    LIMIT 5
   `;
 
     const selectFavourites = `
@@ -43,21 +45,30 @@ async function runOmdb() {
       console.log("Sad to see you go!");
       client.end();
       return
-    } 
+    }
 
     if (userSearch === "s") {
       console.log("Here are your favourites")
       const favouritesRes = await client.query(selectFavourites)
       console.table(favouritesRes.rows)
     } else {
-
       try {
         const searchRes = await client.query(selectSearch);
         console.table(searchRes.rows);
+        const rowNumberToSave: string = readlineSync.question(`Please input the row number of the movies you would like to save (0-9) / "q" to quit: `)
+
+        if (rowNumberToSave === "q") {
+          console.log("Sad to see you go!");
+          client.end();
+          return
+        } else {
+          const saveResult = searchRes.rows[parseInt(rowNumberToSave)]
+          console.table([saveResult])
+
+        }
+
       } catch (err) {
         console.log(err.stack);
-      } finally {
-        console.log("Search was successful!");
       }
     }
 
