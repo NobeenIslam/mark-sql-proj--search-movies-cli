@@ -13,8 +13,6 @@ limit 1
 
 `;
 
-
-
 async function runOmdb() {
   await client.connect();
   console.log("You have successfully connected to omdb database");
@@ -23,7 +21,9 @@ async function runOmdb() {
   let userSearch = "";
   while (userSearch !== "q") {
     userSearch = readlineSync
-      .question('Type to search for your movie / "q" to quit / "s" to see favourites: ')
+      .question(
+        'Type to search for your movie / "q" to quit / "s" to see favourites: '
+      )
       .toLowerCase();
 
     const selectSearch = `
@@ -39,42 +39,39 @@ async function runOmdb() {
 
     const selectFavourites = `
       SELECT * from favourites
-    `
+    `;
 
     if (userSearch === "q") {
       console.log("Sad to see you go!");
       client.end();
-      return
+      return;
     }
 
     if (userSearch === "s") {
-      console.log("Here are your favourites")
-      const favouritesRes = await client.query(selectFavourites)
-      console.table(favouritesRes.rows)
+      console.log("Here are your favourites");
+      const favouritesRes = await client.query(selectFavourites);
+      console.table(favouritesRes.rows);
     } else {
       try {
         const searchRes = await client.query(selectSearch);
         console.table(searchRes.rows);
-        const rowNumberToSave: string = readlineSync.question(`Please input the row number of the movies you would like to save (0-9) / "q" to quit: `)
+        const rowNumberToSave: string = readlineSync.question(
+          `Please input the row number of the movies you would like to save (0-9) / "q" to quit: `
+        );
 
         if (rowNumberToSave === "q") {
           console.log("Sad to see you go!");
           client.end();
-          return
+          return;
         } else {
-          const saveResult = searchRes.rows[parseInt(rowNumberToSave)]
-          console.table([saveResult])
-
+          const saveResult = searchRes.rows[parseInt(rowNumberToSave)];
+          console.table([saveResult]);
         }
-
       } catch (err) {
         console.log(err.stack);
       }
     }
-
   }
-
-
 }
 
 runOmdb();
