@@ -1,4 +1,3 @@
-import readlineSync from "readline-sync";
 import { question } from "readline-sync";
 import { Client } from "pg";
 
@@ -10,7 +9,10 @@ const client = new Client({ database: "omdb" });
 const selectAllFromMovies = `
 select * from movies
 limit 1
+`;
 
+const selectFavourites = `
+SELECT * from favourites
 `;
 
 async function runOmdb() {
@@ -20,10 +22,7 @@ async function runOmdb() {
 
   let userSearch = "";
   while (userSearch !== "q") {
-    userSearch = readlineSync
-      .question(
-        'Type to search for your movie / "q" to quit / "s" to see favourites: '
-      )
+    userSearch = question('Type to search for your movie / "q" to quit / "s" to see favourites: ')
       .toLowerCase();
 
     const selectSearch = `
@@ -37,9 +36,7 @@ async function runOmdb() {
     LIMIT 5
   `;
 
-    const selectFavourites = `
-      SELECT * from favourites
-    `;
+
 
     if (userSearch === "q") {
       console.log("Sad to see you go!");
@@ -55,7 +52,7 @@ async function runOmdb() {
       try {
         const searchRes = await client.query(selectSearch);
         console.table(searchRes.rows);
-        const rowNumberToSave: string = readlineSync.question(
+        const rowNumberToSave: string = question(
           `Please input the row number of the movies you would like to save (0-9) / "q" to quit: `
         );
 
