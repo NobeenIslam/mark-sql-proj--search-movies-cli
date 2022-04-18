@@ -16,10 +16,10 @@ SELECT * from favourites
 `;
 
 function isInputInvalid(confirmSave: string) {
-  if (confirmSave === 'y' || confirmSave === 'n') {
-    return false
+  if (confirmSave === "y" || confirmSave === "n") {
+    return false;
   } else {
-    return true
+    return true;
   }
 }
 
@@ -30,8 +30,9 @@ async function runOmdb() {
 
   let userSearch = "";
   while (userSearch !== "q") {
-    userSearch = question('Type to search for your movie / "q" to quit / "s" to see favourites: ')
-      .toLowerCase();
+    userSearch = question(
+      'Type to search for your movie / "q" to quit / "s" to see favourites: '
+    ).toLowerCase();
 
     const selectSearch = `
     SELECT id, name, date, runtime, budget, revenue, vote_average, votes_count, kind
@@ -43,8 +44,6 @@ async function runOmdb() {
     ORDER BY date DESC
     LIMIT 5
   `;
-
-
 
     if (userSearch === "q") {
       console.log("Sad to see you go!");
@@ -71,14 +70,16 @@ async function runOmdb() {
         } else {
           const saveResult = searchRes.rows[parseInt(rowNumberToSave)];
           console.table([saveResult]);
-          let confirmSave = ''
+          let confirmSave = "";
 
           while (isInputInvalid(confirmSave)) {
-            confirmSave = question(`Are you sure you want to save this movie to favourites / y or n? `)
-            if (confirmSave === 'y') {
-              console.log("save")
-            } else if (confirmSave === 'n') {
-              console.log("Cancel")
+            confirmSave = question(
+              `Are you sure you want to save this movie to favourites / y or n? `
+            );
+            if (confirmSave === "y") {
+              console.log("save");
+            } else if (confirmSave === "n") {
+              console.log("Cancel");
             }
           }
         }
