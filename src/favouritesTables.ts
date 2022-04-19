@@ -34,7 +34,7 @@ async function favouritesTable() {
   try {
     await client.query(dropFavourites);
     await client.query(createFavourites);
-    await client.query(insertDummyFavourite);
+    //await client.query(insertDummyFavourite);
     const res = await client.query(selectAllFavourites);
     console.table(res.rows);
   } catch (err) {
