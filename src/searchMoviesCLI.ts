@@ -28,7 +28,7 @@ async function runSaveSequence(saveResultRows: any[]) {
   );
 
   if (rowNumberToSave === "q") {
-    return
+    return;
   } else {
     const saveResult = saveResultRows[parseInt(rowNumberToSave)];
     console.table([saveResult]);
@@ -55,8 +55,6 @@ function isInputInvalid(confirmSave: string) {
   }
 }
 
-
-
 async function runOmdb() {
   await client.connect();
   console.log("You have successfully connected to omdb database");
@@ -64,14 +62,13 @@ async function runOmdb() {
 
   let userSearch = "";
   while (userSearch !== "q") {
-
     userSearch = question(
       'Type to search for your movie / "q" to quit / "s" to see favourites: '
     ).toLowerCase();
 
     if (userSearch === "q") {
-      quitClient()
-      return
+      quitClient();
+      return;
     }
 
     if (userSearch === "s") {
@@ -83,7 +80,7 @@ async function runOmdb() {
         const searchRes = await client.query(selectSearch, [`%${userSearch}%`]);
         console.table(searchRes.rows);
 
-        runSaveSequence(searchRes.rows)
+        runSaveSequence(searchRes.rows);
       } catch (err) {
         console.log(err.stack);
       }
