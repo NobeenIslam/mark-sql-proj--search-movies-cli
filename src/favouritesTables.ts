@@ -7,6 +7,14 @@ const createFavourites = `
     CREATE TABLE favourites (
         favourite_id INTEGER,
         movie_id INTEGER,
+        name TEXT,
+        date DATE,
+        runtime INT4,
+        budget NUMERIC,
+        revenue NUMERIC,
+        vote_average NUMERIC,
+        vote_count INT8,
+        kind TEXT,
         PRIMARY KEY (favourite_id),
         FOREIGN KEY (movie_id) REFERENCES movies (id)
     );
