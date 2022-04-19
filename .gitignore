@@ -4,3 +4,5 @@ node_modules
 .vscode/last.sql
 .vscode/settings.json
 dist
+
+CLI_pseudo.txt
