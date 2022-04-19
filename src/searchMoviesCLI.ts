@@ -23,14 +23,17 @@ async function quitClient() {
 }
 
 async function runSaveSequence(saveResultRows: any[]) {
+
   const rowNumberToSave: string = question(
-    `Please input the row number of the movies you would like to save (0-9) / "q" to go back to search: `
+    `Please input the row number of the movies you would like to save (0-9) / "q" to go back to new search: `
   );
 
   if (rowNumberToSave === "q") {
     return;
   } else {
     const saveResult = saveResultRows[parseInt(rowNumberToSave)];
+    const valuesToAddToFavourites = Object.keys(saveResult).map(key => saveResult[key])
+    console.log(valuesToAddToFavourites)
     console.table([saveResult]);
     let confirmSave = "";
 
@@ -39,7 +42,17 @@ async function runSaveSequence(saveResultRows: any[]) {
         `Are you sure you want to save this movie to favourites / y or n? `
       );
       if (confirmSave === "y") {
-        console.log("save");
+        try {
+          const insertRest = await client.query(`
+          INSERT into favourites (movie_id,name,date,runtime,budget,revenue,vote_average,vote_count,kind)
+          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+          RETURNING *
+        `, valuesToAddToFavourites)
+          console.table(insertRest.rows)
+          console.log("Movie has been saved");
+        }catch(err){
+          console.log(err.stack)
+        }
       } else if (confirmSave === "n") {
         console.log("Save Canceled");
       }
@@ -51,9 +64,11 @@ function isInputInvalid(confirmSave: string) {
   if (confirmSave === "y" || confirmSave === "n") {
     return false;
   } else {
+    console.log("Please put y or n")
     return true;
   }
 }
+
 
 async function runOmdb() {
   await client.connect();
