@@ -5,7 +5,7 @@ const dropFavourites = `
 `;
 const createFavourites = `
     CREATE TABLE favourites (
-        favourite_id INTEGER,
+        favourite_id SERIAL,
         movie_id INTEGER,
         name TEXT,
         date DATE,

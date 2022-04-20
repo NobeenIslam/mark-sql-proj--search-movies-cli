@@ -25,7 +25,7 @@ async function quitClient() {
 async function runSaveSequence(saveResultRows: any[]) {
 
   const rowNumberToSave: string = question(
-    `Please input the row number of the movies you would like to save (0-9) / "q" to go back to new search: `
+    `Please input the row number of the movie you would like to save (0-9) / "q" to go back to new search: `
   );
 
   if (rowNumberToSave === "q") {
@@ -33,7 +33,6 @@ async function runSaveSequence(saveResultRows: any[]) {
   } else {
     const saveResult = saveResultRows[parseInt(rowNumberToSave)];
     const valuesToAddToFavourites = Object.keys(saveResult).map(key => saveResult[key])
-    console.log(valuesToAddToFavourites)
     console.table([saveResult]);
     let confirmSave = "";
 
@@ -43,13 +42,15 @@ async function runSaveSequence(saveResultRows: any[]) {
       );
       if (confirmSave === "y") {
         try {
-          const insertRest = await client.query(`
+          
+          console.log("Movie has been saved")
+
+          const insertRes = await client.query(`
           INSERT into favourites (movie_id,name,date,runtime,budget,revenue,vote_average,vote_count,kind)
           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
           RETURNING *
         `, valuesToAddToFavourites)
-          console.table(insertRest.rows)
-          console.log("Movie has been saved");
+        
         }catch(err){
           console.log(err.stack)
         }
